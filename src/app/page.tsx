@@ -56,6 +56,7 @@ export default function PortCalculator() {
         originType: record.originPort,
         destinationType: record.destinationPort,
         passengerStayHours: record.vesselType === 'passenger' ? String(record.operativeHours) : "",
+        passengerDockHours: "",
       });
       localStorage.removeItem("duplicateRecord");
     }
