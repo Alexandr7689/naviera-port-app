@@ -1,0 +1,46 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model SystemConfig {
+  id                    Int     @id @default(1)
+  normalDispatchRate    Float   @default(25.0)
+  weekendMultiplier     Float   @default(2.0)
+  holidayMultiplier     Float   @default(2.0)
+  dockStayRatePerMeter  Float   @default(1.15)
+  tramitHoursFix        Int     @default(2)
+}
+
+model Holiday {
+  id    String   @id @default(cuid())
+  date  DateTime @unique
+  name  String
+}
+
+model PortCallRecord {
+  id                  String   @id @default(cuid())
+  vesselName          String
+  vesselType          String   
+  trb                 Float
+  eslora              Float
+  originPort          String
+  destinationPort     String
+  arrivalDate         DateTime
+  isSimultaneous      Boolean
+  importedQty         Float?
+  exportedQty         Float?
+  dischargeRate       Float?
+  loadingRate         Float?
+  operativeHours      Int
+  departureDate       DateTime
+  normalHours         Int
+  specialHours        Int
+  dockStayCost        Float
+  dispatchCost        Float
+  totalCost           Float
+  createdAt           DateTime @default(now())
+}
