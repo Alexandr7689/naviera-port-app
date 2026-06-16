@@ -1,20 +1,23 @@
 import { PrismaClient } from '@prisma/client';
-import { neon } from '@neondatabase/serverless';
-import { PrismaNeonHttp } from '@prisma/adapter-neon';
+import { Pool, neonConfig } from '@neondatabase/serverless';
+import { PrismaNeon } from '@prisma/adapter-neon';
+
+// Forzar modo HTTP (fetch) en lugar de WebSockets.
+// Esto hace que funcione en entornos serverless como Vercel
+// sin necesitar el módulo 'ws' de Node.js.
+neonConfig.poolQueryViaFetch = true;
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
 
   if (!connectionString) {
     throw new Error(
-      '[Prisma] DATABASE_URL no está definida. Verifica las variables de entorno.'
+      '[Prisma] DATABASE_URL no está definida. Verifica las variables de entorno en Vercel.'
     );
   }
 
-  // HTTP adapter es el recomendado para entornos serverless (Vercel, Edge)
-  // No requiere WebSockets ni el módulo 'ws'
-  const sql = neon(connectionString);
-  const adapter = new PrismaNeonHttp(sql as any);
+  const pool = new Pool({ connectionString });
+  const adapter = new PrismaNeon(pool as any);
   return new PrismaClient({ adapter } as any);
 }
 
