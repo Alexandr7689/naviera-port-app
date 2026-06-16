@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { neon } from '@neondatabase/serverless';
-import { PrismaNeonHTTP } from '@prisma/adapter-neon';
+import { PrismaNeonHttp } from '@prisma/adapter-neon';
 
 function createPrismaClient() {
   const connectionString = process.env.DATABASE_URL;
@@ -14,7 +14,7 @@ function createPrismaClient() {
   // HTTP adapter es el recomendado para entornos serverless (Vercel, Edge)
   // No requiere WebSockets ni el módulo 'ws'
   const sql = neon(connectionString);
-  const adapter = new PrismaNeonHTTP(sql as any);
+  const adapter = new PrismaNeonHttp(sql as any);
   return new PrismaClient({ adapter } as any);
 }
 
